@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1599748915838.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "CC9B66C9",
+    "lastKnownWriteTime" : 7299807368364171296,
+    "last_content_update" : 1599748915838,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "C231085",
+        "caption" : "loc %>% mutate(loc_name = gsub(\"To \", \"\", subLocation)) %>% left_join(geoloc, ",
+        "contentUrl" : "grid_resource/gridviewer.html?env=_rs_no_env&obj=&cache_key=C231085",
+        "displayedObservations" : 100,
+        "environment" : "_rs_no_env",
+        "expression" : "loc %>% mutate(loc_name = gsub(\"To \", \"\", subLocation)) %>% left_join(geoloc,      by = c(loc_name = \"name\")) %>% arrange(desc(n))",
+        "object" : "",
+        "preview" : 0,
+        "totalObservations" : 100,
+        "variables" : 5
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

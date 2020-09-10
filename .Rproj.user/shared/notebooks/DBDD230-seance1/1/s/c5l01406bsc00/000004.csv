@@ -1,0 +1,25 @@
+"0","jsnow = appearances %>%filter(name==""Jon Snow"") %>% 
+  left_join(scenes) %>% left_join(episodes) %>% 
+  group_by(name,episodeId,episodeTitle) %>% summarise(screenTime=sum(duration)) %>% 
+  arrange(desc(screenTime)) %>% head(1)
+"
+"2","Joining, by = ""sceneId""
+"
+"2","Joining, by = ""episodeId""
+"
+"2","`summarise()` regrouping output by 'name', 'episodeId' (override with `.groups` argument)
+"
+"2","Warning messages:
+"
+"2","1: "
+"2","In eval(parse_only(paste(""alist("", quote_label(params), "")""))) :"
+"2","
+ "
+"2"," redémarrage de l'évaluation d'une promesse interrompue
+"
+"2","2: "
+"2","In eval(parse_only(paste(""alist("", quote_label(params), "")""))) :"
+"2","
+ "
+"2"," internal error -3 in R_decompress1
+"
