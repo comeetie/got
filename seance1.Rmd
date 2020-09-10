@@ -339,6 +339,22 @@ ggplot(data)+
 ```
 
 
+```{r, fig.height=8, fig.width=9,echo=FALSE}
+library(sf)
+library(tidyr)
+land = st_read("./lands-of-ice-and-fire.json","land")
+places = st_read("./lands-of-ice-and-fire.json","places")
+countries = st_read("./lands-of-ice-and-fire.json","countries")
+jsplaces = places %>% left_join(appearances %>% filter(name=="Tyrion Lannister") %>% left_join(scenes) %>% count(subLocation,wt=duration),by=c("name"="subLocation")) %>% filter(!is.na(n))
+
+ggplot()+geom_sf(data=land,fill="ivory",col="ivory3")+
+  geom_sf(data=jsplaces,aes(size=n))+
+  theme_minimal()+coord_sf(ylim=c(-2,65),xlim=c(-60,40),expand = 0,ndiscr = 0)+
+  theme(panel.background = element_rect(fill = "azure",color=NA)) +
+  labs(title = "GoT",caption = "Etiennne Côme, 2020",x="",y="")
+
+```
+
 --------------------------------------------
 
 --------------------------------------------

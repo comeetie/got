@@ -55,13 +55,18 @@ land=st_read("data/GoTRelease/Landscape.shp") %>% st_centroid() %>% select(name)
 pol=st_read("data/GoTRelease/Political.shp") %>% st_centroid() %>% select(name) %>% mutate(type="Political",size=0)%>% filter(!is.na(name))
 ri=st_read("data/GoTRelease/Rivers.shp") %>% st_centroid() %>% select(name) %>% mutate(type="Rivers",size=0)%>% filter(!is.na(name))
 re=st_read("data/GoTRelease/Regions.shp") %>% st_centroid() %>% select(name) %>% mutate(type="Region",size=0)%>% filter(!is.na(name))
-geoloc = bind_rows(pl,island,land,pol,ri,re)
-plloc=  loc %>% mutate(loc_name=gsub("Outside ","",gsub("To ","",subLocation))) %>% 
-    mutate(loc_name=case_when(loc_name=="Casterly Rock" ~ "Lannisport",loc_name=="The Gift" ~ "Bran's Gift",TRUE ~ loc_name)) %>% left_join(geoloc,by=c("loc_name"="name")) %>% arrange(desc(n))
+wall=st_read("data/GoTRelease/Wall.shp") %>% st_centroid() %>% select(name) %>% mutate(type="Wall",size=0)%>% filter(!is.na(name))
+ro=st_read("data/GoTRelease/Roads.shp") %>% st_centroid() %>% select(name) %>% mutate(type="Roads",size=0)%>% filter(!is.na(name))
+la=st_read("data/GoTRelease/Lakes.shp") %>% st_centroid() %>% select(name) %>% mutate(type="Lake",size=0)%>% filter(!is.na(name))
+geoloc = bind_rows(pl,island,land,pol,ri,re,wall,ro,la)
+plloc=  loc %>% mutate(loc_name=gsub("South to","",gsub("Outside ","",gsub("To ","",subLocation)))) %>% 
+    mutate(loc_name=case_when(loc_name=="Casterly Rock" ~ "Lannisport",
+                              loc_name=="The Gift" ~ "Bran's Gift",
+                              loc_name=="The Kingsroad"~"Kingsroad",
+                              loc_name=="North to the Wall"~"Land of Always Winter",
+                              TRUE ~ loc_name)) %>% left_join(geoloc,by=c("loc_name"="name")) %>% arrange(desc(n))
 
-land=st_read("data/GoTRelease/Land.shp")
-  
-)# nombre de morts
+View(plloc)
 sum(scenes$nbdeath)
 
 # plus grand meurtrier
