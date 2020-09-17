@@ -68,7 +68,7 @@ knitr::opts_template$set(clues = list(box.title = "Indices",
 
 
 </br>
-Dans ce TP nous allons pratiquer un peu de R, en explorant les données de la série Game of thrones avec les librairies `dplyr` et `sf` et nous les visualiserons à l'aide de la bibliothèque ggplot2. Les données tabulaires utilisées ont été collectées par Jeffrey Lancaster et sont issues de [ce projet](https://github.com/jeffreylancaster/game-of-thrones). Les données spatiales ont été créer par ESRI et sont disponnibles [ici](https://www.arcgis.com/home/item.html?id=43d03779288048bfb5d3c46e4bc4ccb0).
+Dans ce TP nous allons pratiquer un peu de R, en explorant les données de la série Game of thrones avec les librairies `dplyr` et `sf` et nous les visualiserons à l'aide de la bibliothèque ggplot2. Les données tabulaires utilisées ont été collectées par Jeffrey Lancaster et sont issues de [ce projet](https://github.com/jeffreylancaster/game-of-thrones). Les données spatiales ont été créer par ESRI et sont disponnibles [ici](https://www.arcgis.com/home/item.html?id=43d03779288048bfb5d3c46e4bc4ccb0). Pour débuter vous pouvez cloner le repository https://github.com/comeetie/got afin de récupérer l'ensemble des données de ce tp.
 
 # Exercise 1 : importer les données et visualiser leurs structures
 
