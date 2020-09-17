@@ -224,7 +224,7 @@ Utiliser la fonction `sum` lors de l'aggrégation et faites des jointures pour p
 ```
 
 ```{r, solution = TRUE}
-jsnow = appearances %>%filter(name=="Jon Snow") %>% 
+appearances %>%filter(name=="Jon Snow") %>% 
   left_join(scenes) %>% left_join(episodes) %>% 
   group_by(name,episodeId,episodeTitle) %>% summarise(screenTime=sum(duration)) %>% 
   arrange(desc(screenTime)) %>% head(1)
@@ -319,7 +319,7 @@ Uilisez `geom_bar` mais spécifiez qu'aucune aggrégation ne doit être faites a
 ```
 
 ```{block, box.title = "Scatter-plots", box.body = list(fill = "white"), box.icon = "fa-star"}
-Construisez une data.frame contenant pour chaque épisode son titre, la saison, la durée le la scène la plus longue, le nombre de scènes et le nombre de morts.
+Construisez une data.frame contenant pour chaque épisode son titre, la saison, la durée de la scène la plus longue, le nombre de scènes et le nombre de morts.
 Réaliser ensuite un scater plot des variables nombres de scènes et durée de la scène la plus longue.
 ```
 
@@ -689,7 +689,7 @@ ggplot()+geom_sf(data=background,color=borderland,fill=colland)+
         text = element_text(family="Palatino",face = "bold",size = 14),
         legend.key = element_rect(fill="#ffffff"),
         ) +
-  labs(title = "Répartition spatiale des scènes des personnage principaux",caption = "@comeetie, 2020",x="",y="")
+  labs(title = "Répartition spatiale des scènes des personnages principaux",caption = "@comeetie, 2020",x="",y="")
 
 ```
 
