@@ -1,3 +1,5 @@
-# A game of Throne introduction to the tidyverse 
+# Introduction au tidyverse, avec game of throne 
 
-[erecices](https://comeetie.github.io/got/got_tp.html)
+- cloner le repository 
+git clone https://github.com/comeetie/got.git
+- faire les [exercices](https://comeetie.github.io/got/got_tp.html)
