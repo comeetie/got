@@ -68,18 +68,19 @@ knitr::opts_template$set(clues = list(box.title = "Indices",
 
 ![GoT Logo](data/logo.jpeg)
 </br>
-Dans ce TP nous allons pratiquer un peu de R, en explorant les données de la série Game of thrones avec la librairie `dplyr`. Les données utilisées ont été collectées par Jeffrey Lancaster et sont issues de [ce projet](https://github.com/jeffreylancaster/game-of-thrones).
+Dans ce TP nous allons pratiquer un peu de R, en explorant les données de la série Game of thrones avec la librairie `dplyr` et les visualiser. Les données utilisées ont été collectées par Jeffrey Lancaster et sont issues de [ce projet](https://github.com/jeffreylancaster/game-of-thrones).
 
+https://hitek.fr/actualite/distance-temporalite-game-of-thrones-saison-7_13898
 
 # Exercise 1 : importer les données et visualiser leurs structures
 
-```{block, box.title = "1", box.body = list(fill = "white"), box.icon = "fa-star"}
-Importer les fichiers  characters.csv, episodes.csv, scenes.csv et appearances.csv du répertoire data et les tocker dans des variables de mêmes nom.
+```{block, box.title = "Lire des données", box.body = list(fill = "white"), box.icon = "fa-star"}
+Importer les fichiers  characters.csv, episodes.csv, scenes.csv et appearances.csv du répertoire data et les stocker dans des variables de mêmes nom.
 ```
 
 
 ```{block, opts.label = "clues"}
-Use `readr::read_csv()`.
+Utilisez `readr::read_csv()` de préfrénce de la libraririe readr pour une meilleure reconnaissance automatique des types des variables.
 ```
 
 ```{r, solution = TRUE}
@@ -90,13 +91,13 @@ scenes = read_csv("data/scenes.csv")
 appearances = read_csv("data/appearances.csv")
 ```
 
-```{block, box.title = "2", box.body = list(fill = "white"), box.icon = "fa-star"}
-regarder la taille de la data.frame appearences, observer les variables communes aux tables scenes et appearences. Uiliser les fonctions `str` et `summary` sur les différentes table pour bien comprendre leurs strcutures et leurs relations.
+```{block, box.title = "Opérations élémentaires", box.body = list(fill = "white"), box.icon = "fa-star"}
+Regardez la taille de la data.frame appearences, observez les variables communes aux tables scenes et appearences. Utilisez les fonctions `str` et `summary` sur les différentes tables pour bien comprendre leurs structures et leurs relations.
 ```
 
 
 ```{block, opts.label = "clues"}
-Utiliser `nrow, ncol` ou `dim` pour connaitres les dimensions des data.frame. Utiliser la fonction `names` pour connaitres le noms des colones et le l'opérateur `in`.
+Utiliser `nrow, ncol` ou `dim` pour connaitres les dimensions des data.frame. Utiliser la fonction `names` pour connaitres le noms des colones et l'opérateur `%in%` ou la fonction setdiff par exemple pour trouver les variables communes.
 ```
 
 ```{r, solution = TRUE}
@@ -108,7 +109,7 @@ str(characters)
 ```
 
 # Exercise 2 : commandes R de bases
-```{block, box.title = "1", box.body = list(fill = "white"), box.icon = "fa-star"}
+```{block, box.title = "Faire une somme", box.body = list(fill = "white"), box.icon = "fa-star"}
 Servez vous de la table scenes pour calculer le nombre de personnages morts dans l'ensemble de la série.
 ```
 
@@ -121,7 +122,7 @@ Utiliser l'opérateur $ et la fonction `sum`.
 sum(scenes$nbdeath)
 ```
 
-```{block, box.title = "2", box.body = list(fill = "white"), box.icon = "fa-star"}
+```{block, box.title = "Comptage et trie", box.body = list(fill = "white"), box.icon = "fa-star"}
 Servez vous de la table characters pour trouver les 5 plus grand meutriers de la série.
 ```
 
@@ -135,7 +136,7 @@ sort(table(characters$killedBy),decreasing = TRUE)[1:5]
 ```
 
 
-```{block, box.title = "3", box.body = list(fill = "white"), box.icon = "fa-star"}
+```{block, box.title = "Sélection", box.body = list(fill = "white"), box.icon = "fa-star"}
 Trouvez la durée de la scène la plus longue et l'id de l'episode.
 ```
 
@@ -149,7 +150,7 @@ scenes[which.max(scenes$duration),]
 ```
 
 # Exercise 3 : dplyr
-```{block, box.title = "1", box.body = list(fill = "white"), box.icon = "fa-star"}
+```{block, box.title = "Trie et filtrage", box.body = list(fill = "white"), box.icon = "fa-star"}
 Trouvez la durée de la scène la plus longue et l'id de l'episode en utilisant dplyr cette fois.
 ```
 
@@ -163,8 +164,8 @@ library(dplyr)
 scenes %>% arrange(desc(duration)) %>% head(1)
 ```
 
-```{block, box.title = "2", box.body = list(fill = "white"), box.icon = "fa-star"}
-Trouvez les personnages de la scenes la plus longue.
+```{block, box.title = "Jointure", box.body = list(fill = "white"), box.icon = "fa-star"}
+Trouvez les personnages de la scène la plus longue.
 ```
 
 
@@ -176,21 +177,21 @@ Utiliser la fonction `left_join` pour faire une jointure.
 scenes %>% arrange(desc(duration)) %>% head(1) %>% left_join(appearances)
 ```
 
-```{block, box.title = "3", box.body = list(fill = "white"), box.icon = "fa-star"}
-Trouvez le lieux le plus visités en nombre de scènes.
+```{block, box.title = "Jointure et aggrégation", box.body = list(fill = "white"), box.icon = "fa-star"}
+Trouvez le lieu le plus visité en nombre de scènes.
 ```
 
 
 ```{block, opts.label = "clues"}
-Utiliser les fonctions `group_by` et `summarize` pour faire une aggrégation.
+Utilisez les fonctions `group_by` et `summarize` pour faire une aggrégation.
 ```
 
 ```{r, solution = TRUE}
 scenes %>% group_by(location) %>% summarise(nbsc = n()) %>% arrange(desc(nbsc))
 ```
 
-```{block, box.title = "4", box.body = list(fill = "white"), box.icon = "fa-star"}
-Trouvez le nombre de scènes à se passant à Port Real.
+```{block, box.title = "Filtrage", box.body = list(fill = "white"), box.icon = "fa-star"}
+Trouvez le nombre de scènes se passant à Port Real.
 ```
 
 
@@ -202,7 +203,7 @@ Utiliser la fonction `filter`.
 scenes %>% filter(location=="Port Real") %>% group_by(location) %>% summarise(nbsc = n())
 ```
 
-```{block, box.title = "5", box.body = list(fill = "white"), box.icon = "fa-star"}
+```{block, box.title = "Aggrégation", box.body = list(fill = "white"), box.icon = "fa-star"}
 Trouvez le lieux précis ou le plus de personages meurent ?
 ```
 
@@ -215,7 +216,7 @@ Utiliser la fonction `sum` lors de l'aggrégation et la variable subLocation.
 scenes %>% group_by(subLocation) %>% summarise(nbd=sum(nbdeath)) %>% arrange(desc(nbd))
 ```
 
-```{block, box.title = "6", box.body = list(fill = "white"), box.icon = "fa-star"}
+```{block, box.title = "Jointure, filtrage, aggrégation", box.body = list(fill = "white"), box.icon = "fa-star"}
 Trouvez l'épisode ou Jon Snow est le plus longtemps visible.
 ```
 
@@ -231,7 +232,7 @@ jsnow = appearances %>%filter(name=="Jon Snow") %>%
   arrange(desc(screenTime)) %>% head(1)
 ```
 
-```{block, box.title = "7", box.body = list(fill = "white"), box.icon = "fa-star"}
+```{block, box.title = "Filtrage, numérique", box.body = list(fill = "white"), box.icon = "fa-star"}
 Combien de personnages passent plus de 30 minutes à l'ecran sur l'ensemble des saisons ?
 ```
 
@@ -243,8 +244,8 @@ appearances %>% left_join(scenes)  %>% group_by(name) %>% summarise(screenTime=s
 
 
 
-```{block, box.title = "8", box.body = list(fill = "white"), box.icon = "fa-star"}
-Quels sont les deux peronnages qui passent le plus de scènes ensembles ?
+```{block, box.title = "Jointure ?", box.body = list(fill = "white"), box.icon = "fa-star"}
+Quels sont les deux personnages qui passent le plus de scènes ensembles ?
 ```
 
 ```{block, opts.label = "clues"}
@@ -261,7 +262,7 @@ appearances %>% left_join(appearances,by=c("sceneId"="sceneId")) %>%
 
 
 ```{block, box.title = "9", box.body = list(fill = "white"), box.icon = "fa-star"}
-Quels sont les deux peronnages qui passent le plus de temps ensembles ?
+Quels sont les deux personnages qui passent le plus de temps ensembles ?
 ```
 
 ```{block, opts.label = "clues"}
@@ -278,7 +279,7 @@ appearances %>% left_join(appearances,by=c("sceneId"="sceneId")) %>%
 ```
 
 # Exercise 4 : ggplot
-```{block, box.title = "1", box.body = list(fill = "white"), box.icon = "fa-star"}
+```{block, box.title = "Géométrie et graphique simple", box.body = list(fill = "white"), box.icon = "fa-star"}
 Créer une table jstime contenant pour chaque épisode le temps de présence à l'écran de Jon Snow puis reproduire ce graphique :
 ```
 ```{r,echo=FALSE}
@@ -293,6 +294,7 @@ ggplot(jstime) +
   xlab("épisode")+ylab("temps")+
   ggtitle("Temps de présence par épisode de John Snow")
 ```
+
 ```{block, opts.label = "clues"}
 Uilisez `geom_bar` mais spécifiez qu'aucune aggrégation ne doit être faites avec l'option `stat='identity'`
 ```
@@ -304,17 +306,105 @@ jstime = appearances %>% filter(name=="Jon Snow") %>%
   group_by(episodeId) %>% 
   summarise(time=sum(duration))
 ggplot(jstime) + 
-  geom_bar(aes(x=episodeId,y=time),stat='identity')+
+  geom_line(aes(x=episodeId,y=time))+
   theme_bw()+
   xlab("épisode")+ylab("temps")+
   ggtitle("Temps de présence par épisode de John Snow")
 ```
 
-```{block, box.title = "1", box.body = list(fill = "white"), box.icon = "fa-star"}
-Créer une table jstime contenant pour chaque épisode le temps de présence à l'écran de Jon Snow puis reproduire ce graphique :
+```{block, box.title = "Variations", box.body = list(fill = "white"), box.icon = "fa-star"}
+Utilisez d'autres géométries : aire, bares. Comparez et commentez.
+```
+
+```{block, opts.label = "clues"}
+Uilisez `geom_bar` mais spécifiez qu'aucune aggrégation ne doit être faites avec l'option `stat='identity'` et `geom_area`.
+```
+
+```{block, box.title = "Scatter-plots", box.body = list(fill = "white"), box.icon = "fa-star"}
+Construisez une data.frame contenant pour chaque épisode son titre, la saison, la durée le la scène la plus longue, le nombre de scènes et le nombre de mort.
+Réaliser ensuite un scater plot des variables nombres de scènes et durée de la scène la plus longue.
+```
+
+```{block, opts.label = "clues"}
+Uilisez `geom_point` et dplyr.
+```
+
+```{r, solution=TRUE}
+scenes_stats=scenes %>% left_join(episodes) %>% 
+  group_by(episodeTitle,seasonNum) %>% 
+  summarize(nb_scenes=n(),duration_max=max(duration),nbdeath=sum(nbdeath))
+
+ggplot(scenes_stats,aes(x=nb_scenes,y=duration_max))+geom_point()
 ```
 
 
+```{block, box.title = "Scatter-plots", box.body = list(fill = "white"), box.icon = "fa-star"}
+Enfin, utiliser la couleur et la taille des points pour encoder des informations sur les saisons et le nombre de morts et finalisez le graphique qui pourrait ressembler à cette version en paramétrant les échelles et en rajoutant quelques labels.
+```
+
+```{block, opts.label = "clues"}
+Uilisez `geom_text` et paramètrez les échelles et le thème.
+```
+
+
+```{r, fig.width=8,fig.height=6,echo=FALSE}
+labels = scenes_stats %>% filter(duration_max>400|nb_scenes>200)
+ggplot(scenes_stats,aes(x=nb_scenes,y=duration_max,col=factor(seasonNum)))+
+  geom_point(aes(size=nbdeath))+
+  geom_text(data=labels,aes(label=episodeTitle),vjust=-0.6)+
+  scale_x_continuous("Nombre de scène",limits = c(0,280))+
+  scale_y_continuous("Durée de la scène la plus longue",limits = c(100,800))+
+  scale_color_brewer("Saison",palette ="Spectral")+
+  guides(colour = "legend", size = "legend")+
+  theme_bw()
+```
+
+
+
+```{r, solution=TRUE}
+labels = scenes_stats %>% filter(duration_max>400|nb_scenes>200)
+ggplot(scenes_stats,aes(x=nb_scenes,y=duration_max,col=factor(seasonNum)))+
+  geom_point(aes(size=nbdeath))+
+  geom_text(data=labels,aes(label=episodeTitle),vjust=-0.6)+
+  scale_x_continuous("Nombre de scène",limits = c(0,280))+
+  scale_y_continuous("Durée de la scène la plus longue",limits = c(100,800))+
+  scale_color_brewer("Saison",palette ="Spectral")+
+  guides(colour = "legend", size = "legend")+
+  theme_bw()
+```
+
+
+
+```{r, solution=TRUE}
+screenTimePerSex = appearances %>% left_join(scenes) %>% left_join(episodes) %>% 
+  left_join(characters) %>% 
+  group_by(episodeTitle,episodeId,seasonNum) %>% 
+  summarise(time_women=sum(if_else(sex=="female",duration,0),na.rm=TRUE),
+            time_men = sum(if_else(sex=="male",duration,0),na.rm = TRUE))
+ggplot(screenTimePerSex)+
+  geom_bar(aes(x=episodeId,y=-time_women),stat='identity',fill='blue')+
+  geom_bar(aes(x=episodeId,y=time_men),fill='red',stat='identity')+coord_flip()
+```
+
+
+```{r, solution=TRUE}
+ggplot(scenes %>% left_join(episodes))+geom_boxplot(aes(x=episodeId,y=duration))
+```
+```{r, solution=TRUE}
+labels = scenes %>% filter(duration>400)
+ggplot(scenes %>% left_join(episodes))+
+  geom_boxplot(aes(x=factor(episodeId),y=duration))+
+  geom_text(data=labels ,aes(x=factor(episodeId),y=duration,label=subLocation),hjust = "right",vjust="top")+
+  xlab("N° épisode")+
+  ylab("Durée des scènes")+
+  ggtitle("Répartition des durées des scènes par épisodes")+
+  theme_bw()
+```
+```{block, box.title = "Stacked bars", box.body = list(fill = "white"), box.icon = "fa-star"}
+Construisez une table contenant pour chaque personnage et chaque saison le temps de présence à l'écran. Filtrez cette table pour ne conservez que les personnages qui appaissent plus d'une heure sur l'ensemble des saisons. Réordonner les niveaux du facteur name pour que les niveaux soient trier par ordre croissant de temps d'apparition.
+
+Réalisez un bar-plot stacké de ces données identique a la figure suivante. Servez vous de [color-brewer](https://colorbrewer2.org/) pour retrouver la palette utilisée. 
+```
 
 ```{r, fig.height=8, fig.width=9,echo=FALSE}
 screenTimePerSeasons = appearances %>% left_join(scenes) %>% 
@@ -338,21 +428,160 @@ ggplot(data)+
   ylab("")+ggtitle("Temps d'apparition cumulé par personnage et saison")
 ```
 
+```{r, solution = TRUE}
+screenTimePerSeasons = appearances %>% left_join(scenes) %>% 
+  left_join(episodes) %>% 
+  group_by(name,seasonNum) %>% 
+  summarise(screenTime=sum(duration)) %>% 
+  arrange(desc(screenTime)) 
+screenTimeTotal = screenTimePerSeasons %>% 
+  group_by(name) %>% 
+  summarise(screenTimeTotal=sum(screenTime))
+mainCharacters = screenTimeTotal %>% 
+  filter(screenTimeTotal>60*60) %>% 
+  arrange(screenTimeTotal) %>% 
+  mutate(nameF=factor(name,levels = name))
+data = screenTimePerSeasons %>% left_join(mainCharacters) %>% filter(!is.na(nameF))
+ggplot(data)+
+  geom_bar(aes(y=nameF,x=screenTime/60,fill=factor(seasonNum,level=8:1)),stat="identity")+
+  scale_fill_brewer("Saison",palette = "Spectral")+theme_bw()+
+  geom_text(data=mainCharacters,aes(y=nameF,x=screenTimeTotal/60+5,label=paste(round(screenTimeTotal/60),'min')),hjust = "left")+
+  scale_x_continuous("Temps d'apparition (min)",breaks = seq(0,750,by=120),limits = c(0,780),expand = c(0,1))+
+  ylab("")+ggtitle("Temps d'apparition cumulé par personnage et saison")
+```
 
-```{r, fig.height=8, fig.width=9,echo=FALSE}
+# Exercise 5 : données spatiale et géo-traitement avec sf
+
+
+```{block, box.title = "Lecture de données géographiques", box.body = list(fill = "white"), box.icon = "fa-star"}
+Lire les données géographiques decrivant l'univers de GoT stockés dans le repertoire `data/GoTRelease` sous forme de fichiers shapefile avec la libraries `sf` et chargez les dans des data-frames aux noms explicites, vous spécifierez lors de l'import que le système de coordonnées est (comparable avec) le système wgs-84 dont le code crs est 4326. Observez les différentes tables créées : dimensions, variables, type de géométrie, méta-données. 
+```
+
+```{block, opts.label = "clues"}
+Utilisez la fonction `st_read` et l'agurment `crs` et les fonctions classiques des data.frames nrow, dim, summary,...
+```
+
+
+```{r, solution=TRUE}
 library(sf)
 library(tidyr)
-land = st_read("./lands-of-ice-and-fire.json","land")
-places = st_read("./lands-of-ice-and-fire.json","places")
-countries = st_read("./lands-of-ice-and-fire.json","countries")
-jsplaces = places %>% left_join(appearances %>% filter(name=="Tyrion Lannister") %>% left_join(scenes) %>% count(subLocation,wt=duration),by=c("name"="subLocation")) %>% filter(!is.na(n))
+library(ggplot2)
+locations=st_read("./data/GoTRelease/Locations.shp",crs=4326)
+lakes=st_read("./data/GoTRelease/Lakes.shp",crs=4326)
+conts=st_read("./data/GoTRelease/Continents.shp",crs=4326)
+land=st_read("./data/GoTRelease/Land.shp",crs=4326)
+wall=st_read("./data/GoTRelease/Wall.shp",crs=4326)
+islands=st_read("./data/GoTRelease/Islands.shp",crs=4326)
+kingdoms=st_read("./data/GoTRelease/Political.shp",crs=4326)
+landscapes=st_read("./data/GoTRelease/Landscape.shp",crs=4326)
+roads=st_read("./data/GoTRelease/Roads.shp",crs=4326)
+rivers=st_read("./data/GoTRelease/Rivers.shp",crs=4326)
+```
 
-ggplot()+geom_sf(data=land,fill="ivory",col="ivory3")+
-  geom_sf(data=jsplaces,aes(size=n))+
-  theme_minimal()+coord_sf(ylim=c(-2,65),xlim=c(-60,40),expand = 0,ndiscr = 0)+
-  theme(panel.background = element_rect(fill = "azure",color=NA)) +
+
+```{block, box.title = "Calcul de distances", box.body = list(fill = "white"), box.icon = "fa-star"}
+Utiliser la fonction `st_distance` pour calculer les distances en m entre les localisations de taille supérieur à 5. Quelles villes sont les plus proches ? Les plus éloignées ?
+```
+
+```{block, opts.label = "clues"}
+N'oubliez pas de filtrer la tables des localisations pour ne conserver que les grosses villes. La fonction which peut être utilisée pour trouver les indices des valeurs maximale et minimale dans une matrice en la combinant avec les fonctions min/max. Enfin, les fonctions upper.tri et lower.tri permetent de ne conserver que la partie triangulaire inférieur (respectivement supérieur) d'une matrice, cela pourrait vous être utile pour trouver les deux villes les plus proches. 
+```
+
+
+```{r, solution=TRUE}
+cities = locations %>% filter(size==5)
+dists = st_distance(cities)
+cities$name[which(dists==max(dists),arr.ind = TRUE)[1,]]
+cities$name[which(dists==min(dists[upper.tri(dists)]) ,arr.ind = TRUE)[1,]]
+```
+
+```{block, box.title = "Jointures spatiales", box.body = list(fill = "white"), box.icon = "fa-star"}
+Quelle famille possède le plus de chateau ?
+Utilisez la fonction la fonction `st_join` pour faire une jointure spatiale en la table location et la table kingdoms (political).
+```
+
+
+```{r, solution=TRUE}
+CastlesPerKingdoms= st_join(locations,kingdoms) %>% 
+  filter(type=="Castle") %>% 
+  st_drop_geometry() %>% 
+  count(ClaimedBy)
+CastlesPerKingdoms
+```
+
+```{block, box.title = "Prédicat géométrique binaires", box.body = list(fill = "white"), box.icon = "fa-star"}
+Quelle famille possède le plus de chateau ?
+Mais cette fois si utilisez la fonction la fonction `st_overlaps` .
+```
+
+```{block, opts.label = "clues"}
+La longueur des vecteur retournés pour chaque polygones est utile. Vous pouvez appliquer une fonction à chaque éléments d'une liste avec `sapply` et `lapply`   
+```
+
+```{r, solution=TRUE}
+castles_cover = st_covers(kingdoms,locations %>% filter(type=="Castle"))
+kingdoms$nbcastles = sapply(castles_cover,length)
+kingdoms %>% arrange(desc(nbcastles))
+```
+
+```{block, box.title = "Intresections, aggrégations", box.body = list(fill = "white"), box.icon = "fa-star"}
+Quelle famille possède la plus grande superficie de forêts ?
+```
+
+```{block, opts.label = "clues"}
+La fonction `st_intersection` devrait vous faciliter la tâche mais n'oubliez pas non plus la fonction `st_area` pour calculer les aires ni les fonctions  de base de `dplyr`.
+```
+
+```{r, solution=TRUE}
+st_intersection(kingdoms,landscapes) %>% mutate(area=st_area(geometry)) %>% count(ClaimedBy,wt=area) %>% st_drop_geometry() %>% arrange(desc(n))
+```
+
+# Exercise 6 : cartographie avec les packages sf, ggplot et cartography
+
+
+```{block, box.title = "Fond de carte", box.body = list(fill = "white"), box.icon = "fa-star"}
+Réalisez un fond de carte de l'univers GoT avec les lacs, rivières et forêts ainsi que les noms des principales villes. Vous pourrez vous servir de `geom_sf` et de `geom_sf_text` et vous inspirer de cette carte:
+```
+
+
+```{block, , opts.label = "clues"}
+Empilez les couches, regardez comment modifier un `theme` `ggplot` ainsi que les options du système de coordonées du graphique avec `coord_sf`. 
+```
+
+```{r, fig.height=8, fig.width=9,echo=FALSE}
+colforest="#c0d7c2"
+colriver="#7ec9dc"
+colriver="#87cdde"
+colland="ivory"
+borderland = "ivory3"  
+ggplot()+geom_sf(data=land,fill=colland,col=borderland,size=0.1)+
+  geom_sf(data=islands,fill=colland,col="ivory3")+
+  geom_sf(data=landscapes %>% filter(type=="forest"),fill=colforest,col=colforest)+
+  geom_sf(data=rivers,col=colriver)+
+  geom_sf(data=lakes,col=colriver,fill=colriver)+
+  geom_sf(data=wall,col="black",size=1)+
+  geom_sf_text(data= locations %>% filter(size>4,name!='Tolos'),aes(label=name),size=2.5,family="Palatino", fontface="italic")+
+  theme_minimal()+coord_sf(expand = 0,ndiscr = 0)+
+  theme(panel.background = element_rect(fill = colriver,color=NA)) +
   labs(title = "GoT",caption = "Etiennne Côme, 2020",x="",y="")
+```
 
+```{r, solution=TRUE}
+colforest="#c0d7c2"
+colriver="#7ec9dc"
+colriver="#87cdde"
+colland="ivory"
+borderland = "ivory3"  
+ggplot()+geom_sf(data=land,fill=colland,col=borderland,size=0.1)+
+  geom_sf(data=islands,fill=colland,col="ivory3")+
+  geom_sf(data=landscapes %>% filter(type=="forest"),fill=colforest,col=colforest)+
+  geom_sf(data=rivers,col=colriver)+
+  geom_sf(data=lakes,col=colriver,fill=colriver)+
+  geom_sf(data=wall,col="black",size=1)+
+  geom_sf_text(data= locations %>% filter(size>4,name!='Tolos'),aes(label=name),size=2.5,family="Palatino", fontface="italic")+
+  theme_minimal()+coord_sf(expand = 0,ndiscr = 0)+
+  theme(panel.background = element_rect(fill = colriver,color=NA)) +
+  labs(title = "GoT",caption = "Etiennne Côme, 2020",x="",y="")
 ```
 
 --------------------------------------------
