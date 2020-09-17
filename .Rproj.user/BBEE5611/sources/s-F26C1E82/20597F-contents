@@ -1,5 +1,5 @@
 ---
-title: "Introduction à R et à dplyr, Games Of Thrones"
+title: "![GoT Logo](data/logo.jpeg)</br> Introduction à R et au tidyverse"
 author: "Etienne Côme"
 date: "**2020**"
 output:
@@ -66,9 +66,9 @@ knitr::opts_template$set(clues = list(box.title = "Indices",
                                       box.collapse = TRUE))
 ```
 
-![GoT Logo](data/logo.jpeg)
+
 </br>
-Dans ce TP nous allons pratiquer un peu de R, en explorant les données de la série Game of thrones avec les librairies `dplyr` et `sf`. Nous les visualiserons à l'aide des bibliothèques ggplot2 et cartography. Les données tabulaires utilisées ont été collectées par Jeffrey Lancaster et sont issues de [ce projet](https://github.com/jeffreylancaster/game-of-thrones). Les données spatiales ont été créer par ESRI et sont disponnible [ici](https://www.arcgis.com/home/item.html?id=43d03779288048bfb5d3c46e4bc4ccb0).
+Dans ce TP nous allons pratiquer un peu de R, en explorant les données de la série Game of thrones avec les librairies `dplyr` et `sf` et nous les visualiserons à l'aide de la bibliothèque ggplot2. Les données tabulaires utilisées ont été collectées par Jeffrey Lancaster et sont issues de [ce projet](https://github.com/jeffreylancaster/game-of-thrones). Les données spatiales ont été créer par ESRI et sont disponnibles [ici](https://www.arcgis.com/home/item.html?id=43d03779288048bfb5d3c46e4bc4ccb0).
 
 # Exercise 1 : importer les données et visualiser leurs structures
 
