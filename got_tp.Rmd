@@ -78,7 +78,7 @@ Importez les fichiers  characters.csv, episodes.csv, scenes.csv et appearances.c
 
 
 ```{block, opts.label = "clues"}
-Utilisez `readr::read_csv()` de préfrénce de la libraririe readr pour une meilleure reconnaissance automatique des types des variables.
+Utilisez `read_csv()` de préférence à de la libraririe `readr` pour une meilleure reconnaissance automatique des types des variables.
 ```
 
 ```{r, solution = TRUE}
@@ -120,8 +120,22 @@ Utilisez l'opérateur $ et la fonction `sum`.
 sum(scenes$nbdeath)
 ```
 
+
+```{block, box.title = "Sélection conditionelle", box.body = list(fill = "white"), box.icon = "fa-star"}
+Servez vous de la table scenes pour calculer le nombre de personnages morts lors de la première saison.
+```
+
+
+```{block, opts.label = "clues"} 
+Utilisez l'opérateur $ et la fonction `sum` comme précédement mais selectionez les bonnes ligne à l'aide d'un vecteur booléen consrtuit à l'aide de la colonne épisode id.
+```
+
+```{r, solution = TRUE}
+sum(scenes$nbdeath[scenes$episodeId<10])
+```
+
 ```{block, box.title = "Comptage et trie", box.body = list(fill = "white"), box.icon = "fa-star"}
-Servez vous de la table characters pour trouver les 5 plus grand meutriers de la série.
+Servez vous de la table characters pour trouver les 5 plus grands meutriers de la série.
 ```
 
 
@@ -140,7 +154,7 @@ Trouvez la durée de la scène la plus longue et l'id de l'episode.
 
 
 ```{block, opts.label = "clues"}
-Utiliser la fonction `which.max` .
+Utilisez la fonction `which.max` .
 ```
 
 ```{r, solution = TRUE}
@@ -154,7 +168,7 @@ Trouvez la durée de la scène la plus longue et l'id de l'episode en utilisant 
 
 
 ```{block, opts.label = "clues"}
-Utilisez les fonctions `arrange` et `head`.
+Utilisez les fonctions `arrange`,`desc` et `head`.
 ```
 
 ```{r, solution = TRUE}
@@ -168,7 +182,7 @@ Trouvez les personnages de la scène la plus longue.
 
 
 ```{block, opts.label = "clues"}
-Utilisez la fonction `left_join` pour faire une jointure.
+Utilisez la fonction `left_join` pour faire une jointure avec la table appearences.
 ```
 
 ```{r, solution = TRUE}
@@ -202,7 +216,7 @@ scenes %>% filter(location=="Port Real") %>% group_by(location) %>% summarise(nb
 ```
 
 ```{block, box.title = "Aggrégation", box.body = list(fill = "white"), box.icon = "fa-star"}
-Trouvez le lieux précis ou le plus de personages meurent ?
+Trouvez le lieux précis ou le plus de personanges meurent ?
 ```
 
 
@@ -220,24 +234,33 @@ Trouvez l'épisode ou Jon Snow est le plus longtemps visible.
 
 
 ```{block, opts.label = "clues"}
-Utiliser la fonction `sum` lors de l'aggrégation et faites des jointures pour pouvoir aggréger à l'échelle de l'épisode. 
+Utilisez la fonction `sum` lors de l'aggrégation et faites des jointures pour pouvoir aggréger à l'échelle de l'épisode. 
 ```
 
 ```{r, solution = TRUE}
 appearances %>%filter(name=="Jon Snow") %>% 
   left_join(scenes) %>% left_join(episodes) %>% 
-  group_by(name,episodeId,episodeTitle) %>% summarise(screenTime=sum(duration)) %>% 
+  group_by(name,episodeId,episodeTitle) %>% 
+  summarise(screenTime=sum(duration)) %>% 
   arrange(desc(screenTime)) %>% head(1)
 ```
 
 ```{block, box.title = "Filtrage, numérique", box.body = list(fill = "white"), box.icon = "fa-star"}
-Combien de personnages passent plus de 30 minutes à l'ecran sur l'ensemble des saisons ?
+Combien de personnages passent plus de 30 minutes à l'écran sur l'ensemble des saisons ?
 ```
 
 
 ```{r, solution = TRUE}
-appearances %>% left_join(scenes)  %>% group_by(name) %>% summarise(screenTime=sum(duration)) %>% 
-  filter(screenTime>30*60) %>% nrow()
+appearances %>% left_join(scenes)  %>% 
+  group_by(name) %>% 
+  summarise(screenTime=sum(duration)) %>% 
+  filter(screenTime>30*60) %>% 
+  nrow()
+# en version racourci avec count 
+appearances %>% left_join(scenes)  %>% 
+  count(name,wt=duration,name = "duration") %>% 
+  filter(duration >30*60) %>% 
+  nrow()
 ```
 
 
@@ -259,7 +282,7 @@ appearances %>% left_join(appearances,by=c("sceneId"="sceneId")) %>%
 ```
 
 
-```{block, box.title = "9", box.body = list(fill = "white"), box.icon = "fa-star"}
+```{block, box.title = "Jointure ?", box.body = list(fill = "white"), box.icon = "fa-star"}
 Quels sont les deux personnages qui passent le plus de temps ensembles ?
 ```
 
@@ -275,6 +298,58 @@ appearances %>% left_join(appearances,by=c("sceneId"="sceneId")) %>%
   summarise(commonTime=sum(duration)) %>% 
   arrange(desc(commonTime))
 ```
+
+```{block, box.title = "Format large", box.body = list(fill = "white"), box.icon = "fa-star"}
+Construisez une data.frame avec une ligne par personnages contenant une colone name et une colone pour chaque lieux avec les durées de présences de chaque personnages. Si un personnage n'est jamais allé dans un lieux la valeur est égale à 0.
+```
+
+```{block, opts.label = "clues"}
+Calculez la durée de présence par personnage et lieux avec un `group_by` et un `summary` puis servez vous de la fonction `pivot_wider` de la librairie `tidyr` pour transformer le résultat en format large et compléter les valeures manquantes avec des zéros.
+```
+
+
+```{r, solution = TRUE}
+library(tidyr)
+duration_location_character = scenes %>% left_join(appearances) %>% 
+  group_by(name,location) %>% 
+  summarize(duration=sum(duration))
+
+duration_large = duration_location_character %>% 
+  pivot_wider(values_from = duration,names_from = location,values_fill = c("duration"=0))
+```
+
+
+```{block, box.title = "Matrice", box.body = list(fill = "white"), box.icon = "fa-star"}
+Construisez à partir de la data.frame précédente une matrice contenant uniquement les variables numériques. Filtrez la pour ne conservez que les lignes dont la somme est supérieur à 3600. Normalisez là pour que les sommes en lignes soient égales à 1. Donnez le nom de chaqué personnage conserver à la ligne correspondante dans la matrice avec la fonction `rownames`.
+```
+
+
+```{block, opts.label = "clues"}
+Uilisez les fonctions `as.matrix` et `rowSums`
+```
+
+```{r, solution=TRUE}
+X=as.matrix(duration_large[,-1])
+Xs=X[rowSums(X)>60*60,]
+Xns=Xs/rowSums(Xs)
+rownames(Xns)=duration_large$name[rowSums(X)>60*60]
+```
+
+```{block, box.title = "Clustering hierarchique", box.body = list(fill = "white"), box.icon = "fa-star"}
+A l'aide de la fonction `dist` calculer la distance de manhatan entre chque lignes de la matrice précédente. Réalisez ensuite un clustering hierarhique avec cette matrice de distance et affichez le résultat. Vous devriez obtennir une figure similaire à la figure suivante : 
+```
+
+```{r, echo=FALSE,fig.width=9,fig.height=7}
+D=dist(Xns,method="manhattan")
+hc=hclust(D)
+plot(hc,main = "Clustering des personnages principaux suivant leur lieux de présences",sub ="@comeetie, 2020",xlab = "")
+```
+
+```{r, solution=TRUE}
+hc=hclust(dist(Xns,method="manhattan"))
+plot(hc,main = "Clustering des personnages principaux suivant leur lieux de présences",sub ="@comeetie, 2020",xlab = "")
+```  
+
 
 # Exercise 4 : ggplot
 ```{block, box.title = "Géométrie et graphique simple", box.body = list(fill = "white"), box.icon = "fa-star"}
@@ -317,6 +392,47 @@ Utilisez d'autres géométries : aire, bares. Comparez et commentez.
 ```{block, opts.label = "clues"}
 Uilisez `geom_bar` mais spécifiez qu'aucune aggrégation ne doit être faites avec l'option `stat='identity'` et `geom_area`.
 ```
+
+```{block, box.title = "Cumul", box.body = list(fill = "white"), box.icon = "fa-star"}
+Calculez pour l'ensemble du scenes le nombre de mort cumulé et le temps passé depuis la première scène. Réalisez ensuite le graphique suivant:
+```
+
+```{r, echo=FALSE,fig.width=7,fig.height=5}
+deaths = scenes %>% select(nbdeath,duration,location,episodeId) %>% mutate(t=cumsum(duration),tdeath=cumsum(nbdeath))
+
+season_t = season_start = episodes  %>% mutate(t=cumsum(total_duration)) %>% 
+  filter(episodeNum==1) %>% pull(t)
+
+ggplot(deaths) + geom_line(aes(x=t/3600,y=tdeath)) +
+  scale_x_continuous("",expand = c(0,0),breaks = season_t/3600,labels =   paste("Saison",1:8),)+
+  scale_y_continuous("Nombre de morts cumulés", expand=c(0,0))+
+  theme_bw()+
+  theme(axis.text.x=element_text(angle=90))+
+  ggtitle("Evolution du nombre de mort au cours du temps")
+```
+
+
+```{block, opts.label = "clues"}
+Uilisez `geom_line` préparé un vecteur avec les temps de début de chaque saison et modifiez les axes avece les fonction `scale_x_continuous` et `scale_y_continuous`.
+```
+
+
+```{r, solution=TRUE}
+deaths = scenes %>% select(nbdeath,duration,location,episodeId) %>% 
+  mutate(t=cumsum(duration),tdeath=cumsum(nbdeath))
+
+season_t = episodes  %>% mutate(t=cumsum(total_duration)) %>% 
+  filter(episodeNum==1) %>% pull(t)
+
+ggplot(deaths) + geom_line(aes(x=t/3600,y=tdeath)) +
+  scale_x_continuous("",expand = c(0,0),breaks = season_t/3600,
+                     labels =   paste("Saison",1:8),)+
+  scale_y_continuous("Nombre de morts cumulés", expand=c(0,0))+
+  theme_bw()+
+    theme(axis.text.x=element_text(angle=90))+
+  ggtitle("Evolution du nombre de mort au cours du temps")
+```
+
 
 ```{block, box.title = "Scatter-plots", box.body = list(fill = "white"), box.icon = "fa-star"}
 Construisez une data.frame contenant pour chaque épisode son titre, la saison, la durée de la scène la plus longue, le nombre de scènes et le nombre de morts.
@@ -545,7 +661,7 @@ kingdoms$nbcastles = sapply(castles_cover,length)
 kingdoms %>% arrange(desc(nbcastles))
 ```
 
-```{block, box.title = "Intresections, aggrégations", box.body = list(fill = "white"), box.icon = "fa-star"}
+```{block, box.title = "Intersections, aggrégations", box.body = list(fill = "white"), box.icon = "fa-star"}
 Quelle famille possède la plus grande superficie de forêts ?
 ```
 
@@ -556,6 +672,36 @@ La fonction `st_intersection` devrait vous faciliter la tâche mais n'oubliez pa
 ```{r, solution=TRUE}
 st_intersection(kingdoms,landscapes) %>% mutate(area=st_area(geometry)) %>% count(ClaimedBy,wt=area) %>% st_drop_geometry() %>% arrange(desc(n))
 ```
+
+```{block, box.title = "Le boss final", box.body = list(fill = "white"), box.icon = "fa-star"}
+Quelle distance ont parcouru les principaux personnage de la série ("Jon Snow", "Tyrion Lannister","Daenerys Targaryen","Sansa Stark","Cersei Lannister","Arya Stark") ?
+La table spatiale `data/GoTRelease/ScenesLocations.shp` vous donnera les localisations des lieux référencés dans la table scène.
+```
+
+```{block, opts.label = "clues"}
+Utilisez la fonction `lag` après un `group_by` par personnage pour construire une colone contenant la localisation précédente du personnage. Faire une double jointure avec la table scenes_locations et utilisez la fonction `st_distance` en utilisant l'option `by_element` pour calculer la distance parcouru entre deux scènes et enfin résumez le tout grâce à une somme.
+```
+
+
+```{r, solution=TRUE}
+main_char= c("Jon Snow", "Tyrion Lannister","Daenerys Targaryen","Sansa Stark","Cersei Lannister","Arya Stark")
+scenes_locations=st_read("./data/GoTRelease/ScenesLocations.shp",crs=4326)
+
+
+distance_characters = scenes %>% left_join(appearances) %>% 
+  filter(name %in% main_char) %>%
+  group_by(name) %>% 
+  mutate(previous_location=lag(location)) %>%
+  filter(location!=previous_location) %>%
+  left_join(scenes_locations)%>%
+  left_join(scenes_locations,by=c("previous_location"="location")) %>% 
+  mutate(dist=st_distance(geometry.x,geometry.y,by_element = TRUE)) %>% 
+  summarise(total_dist=sum(as.numeric(dist),na.rm=TRUE)/1000)
+
+distance_characters 
+
+```
+
 
 # Exercise 6 : cartographie avec les packages sf et ggplot 
 
