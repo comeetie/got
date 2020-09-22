@@ -54,8 +54,27 @@ Locf = Loc %>% mutate(geoloc=location) %>%
   st_as_sf() %>%
   filter(!duplicated(location))
 
+
 write_sf(Locf,"./data/GoTRelease/ScenesLocations.shp")
 
+Locf = subLoc %>% mutate(geoloc=subLocation) %>%
+  mutate(geoloc=gsub("Outside the","",geoloc)) %>%
+  mutate(geoloc=gsub("Outside ","",geoloc)) %>%
+  mutate(geoloc=gsub("To ","",geoloc)) %>%
+  mutate(geoloc=gsub("South to ","",geoloc)) %>%
+  mutate(geoloc=gsub("East to ","",geoloc)) %>%
+  mutate(geoloc=case_when(geoloc=="The Crownlands" ~"Crownsland",
+                          geoloc=="The Riverlands" ~"Riverlands",
+                          geoloc=="North of the Wall"~"The Haunted Forest",
+                          geoloc=="The Stormlands"~"Stormlands",
+                          geoloc=="The Summer Sea"~"Summer Sea",
+                          TRUE~geoloc,)) %>%
+  left_join(geo_loc,by=c("geoloc"="name")) %>% 
+  select(subLocation,geoloc,type,geometry) %>% 
+  st_as_sf() %>%
+  filter(!duplicated(subLocation))
+
+Locf
 
 gg=Locf %>% left_join(Loc)
 colforest="#9bc19b"

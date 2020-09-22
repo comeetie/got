@@ -95,7 +95,7 @@ Regardez la taille de la data.frame appearences, observez les variables communes
 
 
 ```{block, opts.label = "clues"}
-Utiliser `nrow, ncol` ou `dim` pour connaitres les dimensions des data.frame. Utiliser la fonction `names` pour connaitres le noms des colones et l'opérateur `%in%` ou la fonction setdiff par exemple pour trouver les variables communes.
+Utiliser `nrow, ncol` ou `dim` pour connaitres les dimensions des data.frame. Utiliser la fonction `names` pour connaitres le noms des colones et l'opérateur `%in%` ou la fonction `setdiff` par exemple pour trouver les variables communes.
 ```
 
 ```{r, solution = TRUE}
@@ -135,7 +135,7 @@ sum(scenes$nbdeath[scenes$episodeId<10])
 ```
 
 ```{block, box.title = "Comptage et trie", box.body = list(fill = "white"), box.icon = "fa-star"}
-Servez vous de la table characters pour trouver les 5 plus grands meutriers de la série.
+Servez vous de la table characters pour trouver les 5 plus grands meurtriers de la série.
 ```
 
 
@@ -675,7 +675,7 @@ st_intersection(kingdoms,landscapes) %>% mutate(area=st_area(geometry)) %>% coun
 
 ```{block, box.title = "Le boss final", box.body = list(fill = "white"), box.icon = "fa-star"}
 Quelle distance ont parcouru les principaux personnage de la série ("Jon Snow", "Tyrion Lannister","Daenerys Targaryen","Sansa Stark","Cersei Lannister","Arya Stark") ?
-La table spatiale `data/GoTRelease/ScenesLocations.shp` vous donnera les localisations des lieux référencés dans la table scène.
+La table spatiale `data/GoTRelease/ScenesLocations.shp` vous donnera les localisations des lieux référencés dans la table scène et vous utiliserz la fonction `lag` de `dplyr`.
 ```
 
 ```{block, opts.label = "clues"}
@@ -697,6 +697,27 @@ distance_characters = scenes %>% left_join(appearances) %>%
   left_join(scenes_locations,by=c("previous_location"="location")) %>% 
   mutate(dist=st_distance(geometry.x,geometry.y,by_element = TRUE)) %>% 
   summarise(total_dist=sum(as.numeric(dist),na.rm=TRUE)/1000)
+
+distance_characters 
+
+```
+
+```{block, box.title = "Une autre voie", box.body = list(fill = "white"), box.icon = "fa-star"}
+Quelle distance ont parcouru les principaux personnage de la série ("Jon Snow", "Tyrion Lannister","Daenerys Targaryen","Sansa Stark","Cersei Lannister","Arya Stark") ? 
+La table spatiale `data/GoTRelease/ScenesLocations.shp` vous donnera les localisations des lieux référencés dans la table scène. Vous n'utiliserez pas la fonction lag de dplyr.
+```
+
+```{block, opts.label = "clues"}
+Construisez une table spatiale contenant pour chauqe personnage ses scènes et leurs localisation sous frome de points. Groupez par personnage et utilisez la fonction `summary` pour groupez ces points dans muntipoint qui conservera l'ordre (l'option `do_union` devrait vous intéresser). Convertissez ces points en ligne à l'aide de la fonction  `st_cast` et calculer la longueur de ces lignes.  
+```
+
+
+```{r, solution=TRUE}
+distance_characters = scenes %>% left_join(appearances) %>% 
+  filter(name %in% main_char) %>% 
+  left_join(scenes_locations) %>% 
+  st_as_sf() %>%
+  group_by(name) %>% summarise(do_union=FALSE) %>% sf::st_cast("LINESTRING") %>% mutate(dist=as.numeric(st_length(geometry))/1000)
 
 distance_characters 
 
@@ -854,6 +875,16 @@ ggplot()+geom_sf(data=background,color=borderland,fill=colland)+
         ) +
   labs(title = "Temps de présence des personnage principaux",caption = "@comeetie, 2020",x="",y="")
 
+library(readr)
+pop = read_csv("data/populations.csv")
+
+gg=kingdoms %>% left_join(pop)
+
+ggplot(gg)+geom_sf(aes(fill=nbcastles/population*10000))+geom_sf_text(aes(label=ClaimedBy)) +coord_sf(expand = 0,ndiscr = 0)+theme(panel.background = element_rect(fill = colriver,color=NA),
+        text = element_text(family="Palatino",face = "bold",size = 14),
+        legend.key = element_rect(fill="#ffffff"),
+        ) +scale_color_distiller("Chateaux / 10000 hab",pallette="RdOr")+
+  labs(title ="Chateaux / habitants",caption = "@comeetie, 2020",x="",y="")
 
 ```
 --------------------------------------------
