@@ -73,7 +73,7 @@ In this
 In this exercice we will practice a bit of R, exploring data from the Game of thrones series with the `dplyr` and `sf` libraries and we will visualize them using the ggplot2 library. The tabular data used was collected by Jeffrey Lancaster and can be found [this project](https://github.com/jeffreylancaster/game-of-thrones). The spatial data was created by ESRI and is available [here](https://www.arcgis.com/home/item.html?id=43d03779288048bfb5d3c46e4bc4ccb0?]. To start you can clone the repository https://github.com/comeetie/got to retrieve all the necessary data.
 
 
-# Exercise 1 : importer les données et visualiser leurs structures
+# Exercise 1 : load some data and look at their structures
 
 ```{block, box.title = "Data import", box.body = list(fill = "white"), box.icon = "fa-star"}
 Import characters.csv, episodes.csv, scenes.csv and appearances.csv files from the data directory and store them in variables of the same name.
@@ -92,7 +92,7 @@ scenes = read_csv("data/scenes.csv")
 appearances = read_csv("data/appearances.csv")
 ```
 
-```{block, box.title = "data strcuture", box.body = list(fill = "white"), box.icon = "fa-star"}
+```{block, box.title = "data structure", box.body = list(fill = "white"), box.icon = "fa-star"}
 Look at the size of the data.frame appearances, observe the variables common to the scenes and appearances tables. Use the `str` and `summary` functions on the different tables to understand their structures and relationships.
 ```
 
@@ -109,9 +109,9 @@ summary(characters)
 str(characters)
 ```
 
-# Exercise 2 : commandes R de bases
-```{block, box.title = "Faire une somme", box.body = list(fill = "white"), box.icon = "fa-star"}
-Servez vous de la table scenes pour calculer le nombre de personnages morts dans l'ensemble de la série.
+# Exercise 2 : some R base commands 
+```{block, box.title = "Sum", box.body = list(fill = "white"), box.icon = "fa-star"}
+Use the scenes table to calculate the number of dead characters in the whole series.
 ```
 
 
@@ -224,7 +224,7 @@ Find the precise location (subLocation) where the most people die?
 
 
 ```{block, opts.label = "clues"}
-USe the `sum` function during the aggragation and the subLocation feature.
+Use the `sum` function during the aggragation and the subLocation feature.
 ```
 
 ```{r, solution = TRUE}
@@ -339,7 +339,7 @@ rownames(Xns)=duration_large$name[rowSums(X)>60*60]
 ```
 
 ```{block, box.title = "Hierarchical clustering", box.body = list(fill = "white"), box.icon = "fa-star"}
-A l'aide de la fonction `dist` calculer la distance de manhatan entre chaque lignes de la matrice précédente. Réalisez ensuite un clustering hierarhique avec cette matrice de distance et affichez le résultat. Vous devriez obtennir une figure similaire à la figure suivante : 
+Using the function ``dist` calculate the manhatan distance between each line of the previous matrix. Then perform a hierarchical clustering with this distance matrix and display the result. You should get a figure similar to the following one : 
 ```
 
 ```{r, echo=FALSE,fig.width=9,fig.height=7}
@@ -396,8 +396,8 @@ Try other geom's : area, bars. Compare and comment.
 Use `geom_bar` but specify that no stats should be claculated with the option `stat='identity'` and `geom_area`.
 ```
 
-```{block, box.title = "Cumul", box.body = list(fill = "white"), box.icon = "fa-star"}
-Calculez pour l'ensemble du scenes le nombre de mort cumulé et le temps passé depuis la première scène. Réalisez ensuite le graphique suivant:
+```{block, box.title = "Cumsum", box.body = list(fill = "white"), box.icon = "fa-star"}
+Calculate for the entire scene the cumulative death count and time since the first scene. Then make the following graph:
 ```
 
 ```{r, echo=FALSE,fig.width=7,fig.height=5}
@@ -438,12 +438,12 @@ ggplot(deaths) + geom_line(aes(x=t/3600,y=tdeath)) +
 
 
 ```{block, box.title = "Scatter-plots", box.body = list(fill = "white"), box.icon = "fa-star"}
-Construisez une data.frame contenant pour chaque épisode son titre, la saison, la durée de la scène la plus longue, le nombre de scènes et le nombre de morts.
-Réaliser ensuite un scater plot des variables nombres de scènes et durée de la scène la plus longue.
+Build a data.frame containing for each episode its title, the season, the length of the longest scene, the number of scenes and the number of deaths.
+Then make a scater plot of the variables number of scenes and longest scene duration.
 ```
 
 ```{block, opts.label = "clues"}
-Uilisez `geom_point` et dplyr.
+Use `geom_point` 
 ```
 
 ```{r, solution=TRUE}
@@ -456,11 +456,11 @@ ggplot(scenes_stats,aes(x=nb_scenes,y=duration_max))+geom_point()
 
 
 ```{block, box.title = "Scatter-plots", box.body = list(fill = "white"), box.icon = "fa-star"}
-Enfin, utilisez la couleur et la taille des points pour encoder des informations sur les saisons et le nombre de morts et finalisez le graphique qui pourrait ressembler à cette version en paramétrant les échelles et en rajoutant quelques labels.
+Finally, use the color and size of the dots to encode information about the seasons and the number of dead and finalize the graph that might look like this version by setting the scales and adding a few labels.
 ```
 
 ```{block, opts.label = "clues"}
-Uilisez `geom_text` et paramètrez les échelles et le thème.
+USe `geom_text` and use custom scales and theme.
 ```
 
 
@@ -504,7 +504,7 @@ ggplot(scenes_stats,aes(x=nb_scenes,y=duration_max,col=factor(seasonNum)))+
 <!-- ``` -->
 
 ```{block, box.title = "Box-plots", box.body = list(fill = "white"), box.icon = "fa-star"}
-Réalisez une série de box-plots pour représenter les distributions des durées des scènes par épisodes.
+Make a series of box plots to represent the distributions of scene durations by episode.
 ```
 
 ```{r, solution=TRUE}
@@ -512,7 +512,7 @@ ggplot(scenes %>% left_join(episodes))+geom_boxplot(aes(x=episodeId,y=duration))
 ```
 
 ```{block, box.title = "Box-plots", box.body = list(fill = "white"), box.icon = "fa-star"}
-Finalisez la figures, vous pourrez vous inspirer du résultat suivant:
+Finalize the figure, you can be inspired by the following result:
 ```
 
 ```{r, fig.width=9,fig.height=6,echo=FALSE}
@@ -541,9 +541,9 @@ ggplot(scenes %>% left_join(episodes))+
 
 
 ```{block, box.title = "Stacked bars", box.body = list(fill = "white"), box.icon = "fa-star"}
-Construisez une table contenant pour chaque personnage et chaque saison le temps de présence à l'écran. Filtrez cette table pour ne conservez que les personnages qui appaissent plus d'une heure sur l'ensemble des saisons. Réordonner les niveaux du facteur name pour que les niveaux soient trier par ordre croissant de temps d'apparition.
+Build a table containing for each character and each season the time its screen time. Filter this table to keep only the characters that appear for more than one hour over the seasons. Reorder the levels of the name factor so that the levels are sorted in ascending order of appearance time.
 
-Réalisez un bar-plot stacké de ces données identique a la figure suivante. Servez vous de [color-brewer](https://colorbrewer2.org/) pour retrouver la palette utilisée. 
+Make a stacked bar-plot of this data identical to the following figure. Use [color-brewer](https://colorbrewer2.org/) to find the palette used. 
 ```
 
 ```{r, fig.height=8, fig.width=9,echo=FALSE}
@@ -590,15 +590,15 @@ ggplot(data)+
   ylab("")+ggtitle("Temps d'apparition cumulé par personnage et saison")
 ```
 
-# Exercise 5 : données spatiale et géo-traitement avec sf
+# Exercise 5 : Spatial data processing with sf
 
 
-```{block, box.title = "Lecture de données géographiques", box.body = list(fill = "white"), box.icon = "fa-star"}
-Lire les données géographiques decrivant l'univers de GoT stockés dans le repertoire `data/GoTRelease` sous forme de fichiers shapefile avec la libraries `sf` et chargez les dans des data-frames aux noms explicites, vous spécifierez lors de l'import que le système de coordonnées est (comparable avec) le système wgs-84 dont le code crs est 4326. Observez les différentes tables créées : dimensions, variables, type de géométrie, méta-données. 
+```{block, box.title = "Read spatial data", box.body = list(fill = "white"), box.icon = "fa-star"}
+Read the geographical data describing the GoT universe stored in the `data/GoTRelease` directory as shapefile files with the `sf` libraries and load them in data-frames with explicit names, you will specify during the import that the coordinate system is (comparable with) the wgs-84 system whose crs code is 4326. Observe the different tables created: dimensions, variables, type of geometry, metadata. 
 ```
 
 ```{block, opts.label = "clues"}
-Utilisez la fonction `st_read` et l'agurment `crs` et les fonctions classiques des data.frames nrow, dim, summary,...
+Use the `st_read` function and the ``crs` agurment and the classic data.frames functions nrow, dim, summary,...
 ```
 
 
@@ -619,12 +619,12 @@ rivers=st_read("./data/GoTRelease/Rivers.shp",crs=4326)
 ```
 
 
-```{block, box.title = "Calcul de distances", box.body = list(fill = "white"), box.icon = "fa-star"}
-Utiliser la fonction `st_distance` pour calculer les distances en m entre les localisations de taille supérieur à 5. Quelles villes sont les plus proches ? Les plus éloignées ?
+```{block, box.title = "Distances", box.body = list(fill = "white"), box.icon = "fa-star"}
+Use the ``st_distance`` function to calculate distances in m between locations larger than 5. Which cities are the closest? The farthest ones?
 ```
 
 ```{block, opts.label = "clues"}
-N'oubliez pas de filtrer la tables des localisations pour ne conserver que les grosses villes. La fonction which peut être utilisée pour trouver les indices des valeurs maximale et minimale dans une matrice en la combinant avec les fonctions min/max. Enfin, les fonctions upper.tri et lower.tri permetent de ne conserver que la partie triangulaire inférieur (respectivement supérieur) d'une matrice, cela pourrait vous être utile pour trouver les deux villes les plus proches. 
+Don't forget to filter the location table to keep only the big cities. The function which can be used to find the indices of the maximum and minimum values in a matrix by combining it with the min/max functions. Finally, the functions upper.sort and lower.sort allow to keep only the lower (respectively upper) triangular part of a matrix, this could be useful to find the two nearest cities. 
 ```
 
 
@@ -635,9 +635,9 @@ cities$name[which(dists==max(dists),arr.ind = TRUE)[1,]]
 cities$name[which(dists==min(dists[upper.tri(dists)]) ,arr.ind = TRUE)[1,]]
 ```
 
-```{block, box.title = "Jointures spatiales", box.body = list(fill = "white"), box.icon = "fa-star"}
-Quelle famille possède le plus de chateau ?
-Utilisez la fonction la fonction `st_join` pour faire une jointure spatiale en la table location et la table kingdoms (political).
+```{block, box.title = "Spatial join", box.body = list(fill = "white"), box.icon = "fa-star"}
+Which family owns the most castles?
+Use the function ``st_join`` to make a spatial join between the location table and the kingdoms table (political).
 ```
 
 
@@ -649,13 +649,13 @@ CastlesPerKingdoms= st_join(locations,kingdoms) %>%
 CastlesPerKingdoms
 ```
 
-```{block, box.title = "Prédicat géométrique binaires", box.body = list(fill = "white"), box.icon = "fa-star"}
-Quelle famille possède le plus de chateau ?
-Cette fois si utilisez la fonction la fonction `st_overlaps` .
+```{block, box.title = "Binary geometric predicates", box.body = list(fill = "white"), box.icon = "fa-star"}
+Which family owns the most castles?
+This time if you use the function ``st_overlaps` .
 ```
 
 ```{block, opts.label = "clues"}
-La longueur des vecteur retournés pour chaque polygones est utile. Vous pouvez appliquer une fonction à chaque éléments d'une liste avec `sapply` et `lapply`   
+The length of the returned vectors for each polygon is useful. You can apply a function to each element of a list with ``sapply` and ``lapply`.   
 ```
 
 ```{r, solution=TRUE}
@@ -664,25 +664,29 @@ kingdoms$nbcastles = sapply(castles_cover,length)
 kingdoms %>% arrange(desc(nbcastles))
 ```
 
-```{block, box.title = "Intersections, aggrégations", box.body = list(fill = "white"), box.icon = "fa-star"}
-Quelle famille possède la plus grande superficie de forêts ?
+```{block, box.title = "Intersections, aggregations", box.body = list(fill = "white"), box.icon = "fa-star"}
+Which family has the largest area of forest?
 ```
 
 ```{block, opts.label = "clues"}
-La fonction `st_intersection` devrait vous faciliter la tâche mais n'oubliez pas non plus la fonction `st_area` pour calculer les aires ni les fonctions  de base de `dplyr`.
+The `st_intersection` function should make your job easier, but don't forget the `st_area` function to calculate areas and the basic functions of `dplyr`.
 ```
 
 ```{r, solution=TRUE}
-st_intersection(kingdoms,landscapes) %>% mutate(area=st_area(geometry)) %>% count(ClaimedBy,wt=area) %>% st_drop_geometry() %>% arrange(desc(n))
+st_intersection(kingdoms,landscapes) %>% 
+  mutate(area=st_area(geometry)) %>% 
+  count(ClaimedBy,wt=area) %>% 
+  st_drop_geometry() %>% 
+  arrange(desc(n))
 ```
 
-```{block, box.title = "Le boss final", box.body = list(fill = "white"), box.icon = "fa-star"}
-Quelle distance ont parcouru les principaux personnage de la série ("Jon Snow", "Tyrion Lannister","Daenerys Targaryen","Sansa Stark","Cersei Lannister","Arya Stark") ?
-La table spatiale `data/GoTRelease/ScenesLocations.shp` vous donnera les localisations des lieux référencés dans la table scène et vous utiliserez la fonction `lag` de `dplyr`.
+```{block, box.title = "The final boss", box.body = list(fill = "white"), box.icon = "fa-star"}
+How far did the main characters of the series ("Jon Snow", "Tyrion Lannister", "Daenerys Targaryen", "Sansa Stark", "Cersei Lannister", "Arya Stark") travel ?
+The spatial table `data/GoTRelease/ScenesLocations.shp` will give you the locations of the places referenced in the scene table and you will use the `lag` function of `dplyr`.
 ```
 
 ```{block, opts.label = "clues"}
-Utilisez la fonction `lag` après un `group_by` par personnage pour construire une colone contenant la localisation précédente du personnage. Faire une double jointure avec la table scenes_locations et utilisez la fonction `st_distance` en utilisant l'option `by_element` pour calculer la distance parcouru entre deux scènes et enfin résumez le tout grâce à une somme.
+Use the `lag` function after a `group_by` per character to build a column containing the previous location of the character. Make a double join with the scenes_locations table and use the `st_distance` function using the `by_element` option to calculate the distance between two scenes and finally sum it all up with a sum.
 ```
 
 
@@ -705,13 +709,12 @@ distance_characters
 
 ```
 
-```{block, box.title = "Une autre voie", box.body = list(fill = "white"), box.icon = "fa-star"}
-Quelle distance ont parcouru les principaux personnage de la série ("Jon Snow", "Tyrion Lannister","Daenerys Targaryen","Sansa Stark","Cersei Lannister","Arya Stark") ? 
-La table spatiale `data/GoTRelease/ScenesLocations.shp` vous donnera les localisations des lieux référencés dans la table scène. Vous n'utiliserez pas la fonction lag de dplyr.
+```{block, box.title = "Another path", box.body = list(fill = "white"), box.icon = "fa-star"}
+Same question but without using the ``lag` function of dplyr.
 ```
 
 ```{block, opts.label = "clues"}
-Construisez une table spatiale contenant pour chauqe personnage ses scènes et leurs localisation sous frome de points. Groupez par personnage et utilisez la fonction `summary` pour groupez ces points dans muntipoint qui conservera l'ordre (l'option `do_union` devrait vous intéresser). Convertissez ces points en ligne à l'aide de la fonction  `st_cast` et calculer la longueur de ces lignes.  
+Build a spatial table containing the location of each character's scenes and their locations in the form of dots. Group by character and use the ``summary` function to group these points into a multipoint that will keep the order (the ``do_union` option should be of interest to you). Convert these points into lines using the ``st_cast`` function and calculate the length of these lines.  
 ```
 
 
@@ -730,13 +733,13 @@ distance_characters
 # Exercise 6 : cartographie avec les packages sf et ggplot 
 
 
-```{block, box.title = "Fond de carte", box.body = list(fill = "white"), box.icon = "fa-star"}
-Réalisez un fond de carte de l'univers GoT avec les lacs, rivières et forêts ainsi que les noms des principales villes. Vous pourrez vous servir de `geom_sf` et de `geom_sf_text` et vous inspirer de cette carte:
+```{block, box.title = "Map background", box.body = list(fill = "white"), box.icon = "fa-star"}
+Make a background map of the GoT universe with the lakes, rivers and forests as well as the names of the main cities. You can use ``geom_sf` and ``geom_sf_text` and be inspired by this map:
 ```
 
 
 ```{block, , opts.label = "clues"}
-Empilez les couches, regardez comment modifier un `theme` `ggplot` ainsi que les options du système de coordonées du graphique avec `coord_sf`. 
+Stack the layers, see how to change a `ggplot` theme and the graph coordinate system options with ``coord_sf`. 
 ```
 
 ```{r, fig.height=8, fig.width=9,echo=FALSE}
@@ -777,8 +780,8 @@ ggplot()+geom_sf(data=land,fill=colland,col=borderland,size=0.1)+
 
 
 
-```{block, box.title = "Symboles proportionels", box.body = list(fill = "white"), box.icon = "fa-star"}
-Construisez une data.frame contenant pour chaque lieux le tempsd eprésence à l'écran de "Tyrion Lannister". Chargez les données spatiales `data//GoTRelease/ScenesLocations.shp` et joindre celle-ci avec la table précéndente. Enfin réalisez une carte avec des symboles proportionels pour visualisez ces données. 
+```{block, box.title = "Proportionals symbols", box.body = list(fill = "white"), box.icon = "fa-star"}
+Build a data.frame containing for each location the time of presence on the screen of "Tyrion Lannister". Load the spatial data ``data//GoTRelease/ScenesLocations.shp`` and join it with the previous table. Finally make a map with proportional symbols to visualize these data. 
 ```
 
 
@@ -808,9 +811,9 @@ ggplot()+geom_sf(data=land,fill=colland,col=borderland,size=0.1)+
 ```
 
 
-```{block, box.title = "Symboles proportionels et facettes (1)", box.body = list(fill = "white"), box.icon = "fa-star"}
-Préparation des fond de carte simplifiés :
-Créez une data.frame spatiale backgound en utilisant la fonction `st_as_sf` contenant une colonne `name` avec les noms des 6 personnages principaux de la série "Jon Snow", "Tyrion Lannister","Daenerys Targaryen","Sansa Stark","Cersei Lannister","Arya Stark" et une colonne geometry identique pour tous les personnages contenant l'union de tout les polygones de terre et d'île.  
+```{block, box.title = "Proportionals symbols and facets (1)", box.body = list(fill = "white"), box.icon = "fa-star"}
+Preparation of simplified background maps :
+Create a spatial data.frame backgound using the function `st_as_sf` containing a column `name` with the names of the 6 main characters of the series "Jon Snow", "Tyrion Lannister", "Daenerys Targaryen", "Sansa Stark", "Cersei Lannister", "Arya Stark" and an identical geometry column for all characters containing the union of all land and island polygons.  
 ```
 
 
@@ -827,8 +830,8 @@ backpol=st_union(landpol,islandpol)
 background = st_as_sf(data.frame(name=main_char,geometry=rep(backpol,6)))
 ```
 
-```{block, box.title = "Symboles proportionels et facettes (1)", box.body = list(fill = "white"), box.icon = "fa-star"}
-Créez une data.frame avec pour chaque personnage principal et chaque localisation le temps de présence à l'écran. Joindre cette table à la table des lieux géo-référencés.
+```{block, box.title = "Proportionals symbols and facets (2)", box.body = list(fill = "white"), box.icon = "fa-star"}
+Create a data.frame with for each main character and each location the time of presence on the screen. Attach this table to the table of georeferenced locations.
 ```
 
 ```{r, solution=TRUE}
@@ -839,11 +842,11 @@ loc_time_mc = scenes_locations %>% left_join(loc_time)
 ```
 
 ```{block, box.title = "Symboles proportionels et facettes (2)", box.body = list(fill = "white"), box.icon = "fa-star"}
-Faire une série de carte (une par personnage) avec les temps de présence représentés en symboles proportionel. La figure finale pourrait ressembler à cela: 
+Make a series of map (one per character) with their screen times  represented in proportional symbols. The final figure might look like this: 
 ```
 
 ```{block, , opts.label = "clues"}
-Utilisez les possibilités de `facet_wrap` avec les deux data.frame construites précédement.  
+Use the possibilities of `facet_wrap` with the two previously built data.frame.  
 ```
 
 
