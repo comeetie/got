@@ -527,9 +527,10 @@ ggplot(scenes %>% left_join(episodes))+
 ```{r, solution=TRUE}
 labels = scenes %>% filter(duration>400)
 ggplot(scenes %>% left_join(episodes))+
-  geom_boxplot(aes(x=factor(episodeId),y=duration,fill=seasonNum))+
+  geom_boxplot(aes(x=factor(episodeId),y=duration,fill=factor(seasonNum)))+
   geom_text(data=labels ,aes(x=factor(episodeId),y=duration,label=subLocation),hjust = "right",vjust="top")+
-  xlab("N° épisode")+
+  scale_x_discrete("N° épisode",as.character(seq(1,73, by=5)))+
+  scale_fill_brewer(palette="Spectral",guide="none")+
   ylab("Durée des scènes (min)")+
   ggtitle("Répartition des durées des scènes par épisodes")+
   theme_bw()
