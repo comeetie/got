@@ -203,7 +203,7 @@ scenes %>% group_by(location) %>% summarise(nbsc = n()) %>% arrange(desc(nbsc))
 ```
 
 ```{block, box.title = "Filtrage", box.body = list(fill = "white"), box.icon = "fa-star"}
-Trouvez le nombre de scènes se passant à Port Real.
+Trouvez le nombre de scènes se passant à King's Landing.
 ```
 
 
@@ -212,7 +212,7 @@ Utilisez la fonction `filter`.
 ```
 
 ```{r, solution = TRUE}
-scenes %>% filter(location=="Port Real") %>% group_by(location) %>% summarise(nbsc = n())
+scenes %>% filter(location=="King's Landing") %>% group_by(location) %>% summarise(nbsc = n())
 ```
 
 ```{block, box.title = "Aggrégation", box.body = list(fill = "white"), box.icon = "fa-star"}
@@ -505,7 +505,7 @@ Réalisez une série de box-plots pour représenter les distributions des durée
 ```
 
 ```{r, solution=TRUE}
-ggplot(scenes %>% left_join(episodes))+geom_boxplot(aes(x=episodeId,y=duration))
+ggplot(scenes %>% left_join(episodes))+geom_boxplot(aes(x=factor(episodeId),y=duration))
 ```
 
 ```{block, box.title = "Box-plots", box.body = list(fill = "white"), box.icon = "fa-star"}
