@@ -206,7 +206,7 @@ scenes %>% group_by(location) %>% summarise(nbsc = n()) %>% arrange(desc(nbsc))
 ```
 
 ```{block, box.title = "Filer", box.body = list(fill = "white"), box.icon = "fa-star"}
-How many scenes take place in Port Real ?
+How many scenes take place in King's Landing ?
 ```
 
 
@@ -215,7 +215,7 @@ Use the `filter` function to target the relevant rows.
 ```
 
 ```{r, solution = TRUE}
-scenes %>% filter(location=="Port Real") %>% group_by(location) %>% summarise(nbsc = n())
+scenes %>% filter(location=="King's Landing") %>% group_by(location) %>% summarise(nbsc = n())
 ```
 
 ```{block, box.title = "Aggregation", box.body = list(fill = "white"), box.icon = "fa-star"}
@@ -401,32 +401,43 @@ Calculate for the entire scene the cumulative death count and time since the fir
 ```
 
 ```{r, echo=FALSE,fig.width=7,fig.height=5}
-deaths = scenes %>% select(nbdeath,duration,location,episodeId) %>% mutate(t=cumsum(duration),tdeath=cumsum(nbdeath))
+# nombre de morts cumulé et temps passé
+deaths = scenes %>% select(nbdeath,duration,location,episodeId) %>% 
+  mutate(t=cumsum(duration),tdeath=cumsum(nbdeath))
 
-season_t = season_start = episodes  %>% mutate(t=cumsum(total_duration)) %>% 
-  filter(episodeNum==1) %>% pull(t)
+# instant de changement de saison
+# ? lag
+season_t = episodes %>% mutate(ld=lag(total_duration)) %>% 
+  mutate(ld=if_else(is.na(ld),0,ld), td = cumsum(ld)) %>% 
+  filter(episodeNum==1) %>% pull(td)
 
+# geom_line + labels personalisés
 ggplot(deaths) + geom_line(aes(x=t/3600,y=tdeath)) +
-  scale_x_continuous("",expand = c(0,0),breaks = season_t/3600,labels =   paste("Saison",1:8),)+
+  scale_x_continuous("",expand = c(0,0),breaks = season_t/3600,
+                     labels =   paste("Saison",1:8),)+
   scale_y_continuous("Nombre de morts cumulés", expand=c(0,0))+
   theme_bw()+
-  theme(axis.text.x=element_text(angle=90))+
+    theme(axis.text.x=element_text(angle=90))+
   ggtitle("Evolution du nombre de mort au cours du temps")
 ```
 
-
 ```{block, opts.label = "clues"}
-Uilisez `geom_line` préparé un vecteur avec les temps de début de chaque saison et modifiez les axes avece les fonction `scale_x_continuous` et `scale_y_continuous`.
+Use `geom_line`  and prepare a vector of seasons start time for the labels. Use `scale_x_continuous` and `scale_y_continuous` to change the axes labels.
 ```
 
 
 ```{r, solution=TRUE}
+# nombre de morts cumulé et temps passé
 deaths = scenes %>% select(nbdeath,duration,location,episodeId) %>% 
   mutate(t=cumsum(duration),tdeath=cumsum(nbdeath))
 
-season_t = episodes  %>% mutate(t=cumsum(total_duration)) %>% 
-  filter(episodeNum==1) %>% pull(t)
+# instant de changement de saison
+# ? lag
+season_t = episodes %>% mutate(ld=lag(total_duration)) %>% 
+  mutate(ld=if_else(is.na(ld),0,ld), td = cumsum(ld)) %>% 
+  filter(episodeNum==1) %>% pull(td)
 
+# geom_line + labels personalisés
 ggplot(deaths) + geom_line(aes(x=t/3600,y=tdeath)) +
   scale_x_continuous("",expand = c(0,0),breaks = season_t/3600,
                      labels =   paste("Saison",1:8),)+
@@ -508,7 +519,7 @@ Make a series of box plots to represent the distributions of scene durations by 
 ```
 
 ```{r, solution=TRUE}
-ggplot(scenes %>% left_join(episodes))+geom_boxplot(aes(x=episodeId,y=duration))
+ggplot(scenes %>% left_join(episodes))+geom_boxplot(aes(x=factor(episodeId),y=duration))
 ```
 
 ```{block, box.title = "Box-plots", box.body = list(fill = "white"), box.icon = "fa-star"}
