@@ -394,36 +394,49 @@ Uilisez `geom_bar` mais spécifiez qu'aucune aggrégation ne doit être faites a
 ```
 
 ```{block, box.title = "Cumul", box.body = list(fill = "white"), box.icon = "fa-star"}
-Calculez pour l'ensemble du scenes le nombre de mort cumulé et le temps passé depuis la première scène. Réalisez ensuite le graphique suivant:
+Calculez pour l'ensemble des scenes le nombre de mort cumulé et le temps passé depuis la première scène. Réalisez ensuite le graphique suivant:
 ```
 
 ```{r, echo=FALSE,fig.width=7,fig.height=5}
-deaths = scenes %>% select(nbdeath,duration,location,episodeId) %>% mutate(t=cumsum(duration),tdeath=cumsum(nbdeath))
+# nombre de morts cumulé et temps passé
+deaths = scenes %>% select(nbdeath,duration,location,episodeId) %>% 
+  mutate(t=cumsum(duration),tdeath=cumsum(nbdeath))
 
-season_t = season_start = episodes  %>% mutate(t=cumsum(total_duration)) %>% 
-  filter(episodeNum==1) %>% pull(t)
+# instant de changement de saison
+# ? lag
+season_t = episodes %>% mutate(ld=lag(total_duration)) %>% 
+  mutate(ld=if_else(is.na(ld),0,ld), td = cumsum(ld)) %>% 
+  filter(episodeNum==1) %>% pull(td)
 
+# geom_line + labels personalisés
 ggplot(deaths) + geom_line(aes(x=t/3600,y=tdeath)) +
-  scale_x_continuous("",expand = c(0,0),breaks = season_t/3600,labels =   paste("Saison",1:8),)+
+  scale_x_continuous("",expand = c(0,0),breaks = season_t/3600,
+                     labels =   paste("Saison",1:8),)+
   scale_y_continuous("Nombre de morts cumulés", expand=c(0,0))+
   theme_bw()+
-  theme(axis.text.x=element_text(angle=90))+
+    theme(axis.text.x=element_text(angle=90))+
   ggtitle("Evolution du nombre de mort au cours du temps")
 ```
 
 
 ```{block, opts.label = "clues"}
+Utilisez la fonction `cumsum` pour calculer le nombre de morts cumulé et le temps passé.
 Uilisez `geom_line` préparez un vecteur avec les temps de début de chaque saison et modifiez les axes avece les fonction `scale_x_continuous` et `scale_y_continuous`.
 ```
 
 
 ```{r, solution=TRUE}
+# nombre de morts cumulé et temps passé
 deaths = scenes %>% select(nbdeath,duration,location,episodeId) %>% 
   mutate(t=cumsum(duration),tdeath=cumsum(nbdeath))
 
-season_t = episodes  %>% mutate(t=cumsum(total_duration)) %>% 
-  filter(episodeNum==1) %>% pull(t)
+# instant de changement de saison
+# ? lag
+season_t = episodes %>% mutate(ld=lag(total_duration)) %>% 
+  mutate(ld=if_else(is.na(ld),0,ld), td = cumsum(ld)) %>% 
+  filter(episodeNum==1) %>% pull(td)
 
+# geom_line + labels personalisés
 ggplot(deaths) + geom_line(aes(x=t/3600,y=tdeath)) +
   scale_x_continuous("",expand = c(0,0),breaks = season_t/3600,
                      labels =   paste("Saison",1:8),)+
