@@ -662,7 +662,7 @@ CastlesPerKingdoms
 
 ```{block, box.title = "Prédicat géométrique binaires", box.body = list(fill = "white"), box.icon = "fa-star"}
 Quelle famille possède le plus de chateau ?
-Cette fois si utilisez la fonction la fonction `st_overlaps` .
+Cette fois si utilisez la fonction la fonction `st_covers` .
 ```
 
 ```{block, opts.label = "clues"}

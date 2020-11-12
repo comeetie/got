@@ -631,7 +631,7 @@ rivers=st_read("./data/GoTRelease/Rivers.shp",crs=4326)
 
 
 ```{block, box.title = "Distances", box.body = list(fill = "white"), box.icon = "fa-star"}
-Use the ``st_distance`` function to calculate distances in m between locations larger than 5. Which cities are the closest? The farthest ones?
+Use the ``st_distance`` function to calculate distances in m between locations of size5. Which cities are the closest? The farthest ones?
 ```
 
 ```{block, opts.label = "clues"}
@@ -662,7 +662,7 @@ CastlesPerKingdoms
 
 ```{block, box.title = "Binary geometric predicates", box.body = list(fill = "white"), box.icon = "fa-star"}
 Which family owns the most castles?
-This time if you use the function ``st_overlaps` .
+This time if you use the function ``st_covers` .
 ```
 
 ```{block, opts.label = "clues"}
