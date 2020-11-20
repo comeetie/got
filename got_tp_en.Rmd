@@ -741,7 +741,7 @@ distance_characters
 ```
 
 
-# Exercise 6 : cartographie avec les packages sf et ggplot 
+# Exercise 6 : cartography with ggplot 
 
 
 ```{block, box.title = "Map background", box.body = list(fill = "white"), box.icon = "fa-star"}
