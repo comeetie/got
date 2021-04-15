@@ -212,11 +212,11 @@ Utilisez la fonction `filter`.
 ```
 
 ```{r, solution = TRUE}
-scenes %>% filter(location=="King's Landing") %>% group_by(location) %>% summarise(nbsc = n())
+scenes %>% filter(subLocation=="King's Landing") %>% summarise(nbsc = n())
 ```
 
 ```{block, box.title = "Aggrégation", box.body = list(fill = "white"), box.icon = "fa-star"}
-Trouvez le lieux précis ou le plus de personanges meurent ?
+Trouvez le lieux précis ou le plus de personages meurent ?
 ```
 
 
@@ -336,7 +336,7 @@ rownames(Xns)=duration_large$name[rowSums(X)>60*60]
 ```
 
 ```{block, box.title = "Clustering hierarchique", box.body = list(fill = "white"), box.icon = "fa-star"}
-Using the function `dist` calculate the manhatan distance between each line of the previous matrix. Then perform a hierarchical clustering with this distance matrix and display the result. You should get a figure similar to the followin: 
+Utilisez la fonction `dist` pour calculer la distance de manhatan netre chaque ligne de la matrice précedente. Réalisez ensuite un clustering hierarchique sur cette matrice et tracer le dendogramme. Vous devriez obtenir une figure similaire a la suivante: 
 ```
 
 ```{r, echo=FALSE,fig.width=9,fig.height=7}
